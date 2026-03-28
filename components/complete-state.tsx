@@ -6,6 +6,14 @@ interface CompleteStateProps {
   onDownload: () => void;
   onDownload2: () => void;
   onReset: () => void;
+  /** Título devuelto por MusicGPT (title_1 / title_2) */
+  generatedTitle?: string | null;
+  /** Letra V1 (lyrics_1 o lyrics) */
+  generatedLyrics?: string | null;
+  /** Letra V2 si difiere de V1 */
+  generatedLyrics2?: string | null;
+  /** Modo solo instrumental: sin bloque de letra esperado */
+  instrumentalOnly?: boolean;
 }
 
 export const CompleteState = memo(function CompleteState({
@@ -14,7 +22,13 @@ export const CompleteState = memo(function CompleteState({
   onDownload,
   onDownload2,
   onReset,
+  generatedTitle,
+  generatedLyrics,
+  generatedLyrics2,
+  instrumentalOnly,
 }: CompleteStateProps) {
+  const hasLyrics = Boolean(generatedLyrics?.trim() || generatedLyrics2?.trim());
+
   return (
     <div className="space-y-6 sm:space-y-8 lg:space-y-10">
       {/* Success Icon */}
@@ -41,6 +55,43 @@ export const CompleteState = memo(function CompleteState({
           ¡Música Lista!
         </h2>
         <p className="text-xs sm:text-sm text-gray-400">Tu pista ha sido generada exitosamente</p>
+        {generatedTitle?.trim() ? (
+          <p className="text-sm sm:text-base text-purple-300 mt-2 font-medium">{generatedTitle.trim()}</p>
+        ) : null}
+      </div>
+
+      {/* Letra generada (MusicGPT: lyrics_1 / lyrics_2 en GET byId) */}
+      <div className="rounded-xl sm:rounded-2xl border border-purple-500/25 bg-gray-900/50 p-4 sm:p-6">
+        <h3 className="text-xs sm:text-sm font-semibold text-purple-300 uppercase tracking-wider mb-3">
+          Letra
+        </h3>
+        {hasLyrics ? (
+          <div className="space-y-4 max-h-64 sm:max-h-80 overflow-y-auto pr-1">
+            {generatedLyrics?.trim() ? (
+              <pre className="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap font-sans leading-relaxed">
+                {generatedLyrics.trim()}
+              </pre>
+            ) : null}
+            {generatedLyrics2?.trim() ? (
+              <div>
+                <p className="text-[10px] sm:text-xs text-pink-400/90 font-semibold uppercase mb-2">
+                  Versión 2
+                </p>
+                <pre className="text-xs sm:text-sm text-gray-300 whitespace-pre-wrap font-sans leading-relaxed">
+                  {generatedLyrics2.trim()}
+                </pre>
+              </div>
+            ) : null}
+          </div>
+        ) : instrumentalOnly ? (
+          <p className="text-xs sm:text-sm text-gray-500 italic">
+            Pieza instrumental: no se espera letra; si el modelo devolviera texto, aparecería aquí.
+          </p>
+        ) : (
+          <p className="text-xs sm:text-sm text-gray-500 italic">
+            MusicGPT no incluyó letra en la respuesta (revisa consola / red si persiste).
+          </p>
+        )}
       </div>
 
       {/* Audio Player Cards */}

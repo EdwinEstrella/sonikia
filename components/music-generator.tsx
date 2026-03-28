@@ -81,6 +81,10 @@ function MusicGenerator() {
               onDownload={handleDownload}
               onDownload2={handleDownload2}
               onReset={reset}
+              generatedTitle={appState.generatedTitle}
+              generatedLyrics={appState.generatedLyrics}
+              generatedLyrics2={appState.generatedLyrics2}
+              instrumentalOnly={appState.instrumentalOnly}
             />
           )}
 

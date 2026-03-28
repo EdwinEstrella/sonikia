@@ -21,18 +21,42 @@ export interface MusicAIResponse {
   eta: number;
 }
 
+/** Respuesta de GET /v1/byId (MusicGPT) — nombres reales del API. */
 export interface ConversionDetails {
-  task_id: string;
-  conversion_id: string;
-  status: 'processing' | 'complete' | 'failed';
-  status_msg: string;
-  audio_url?: string;
-  conversion_cost: number;
+  task_id?: string;
+  conversion_id?: string;
+  status: string;
+  status_msg?: string;
+  message?: string;
+  conversion_path_1?: string;
+  conversion_path_2?: string;
+  /** A veces vacío; la letra generada suele ir en lyrics_1 / lyrics_2 */
+  lyrics?: string;
+  lyrics_1?: string;
+  lyrics_2?: string;
+  lyrics_timestamped_1?: string;
+  lyrics_timestamped_2?: string;
+  title?: string;
+  title_1?: string;
+  title_2?: string;
+  music_style?: string;
+  description_prompt?: string;
+  instrumental?: boolean;
+  vocal_only?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/** Une letra y título tal como los devuelve byId. */
+export function pickConversionLyrics(c: ConversionDetails): {
+  lyrics1: string;
+  lyrics2: string;
   title: string;
-  lyrics: string;
-  music_style: string;
-  createdAt: string;
-  updatedAt: string;
+} {
+  const lyrics1 = (c.lyrics_1 ?? c.lyrics ?? '').trim();
+  const lyrics2 = (c.lyrics_2 ?? '').trim();
+  const title = (c.title_1 ?? c.title_2 ?? c.title ?? '').trim();
+  return { lyrics1, lyrics2, title };
 }
 
 export interface ConversionByIdResponse {
@@ -57,8 +81,13 @@ export interface AppState {
   vocalOnly: boolean;
   instrumentalOnly: boolean;
   selectedPreset: string;
+  /** Letra escrita por el usuario antes de generar */
   lyrics: string;
   gender: 'male' | 'female' | 'neutral' | '';
+  /** Letra devuelta por MusicGPT (lyrics_1 / lyrics_2) */
+  generatedLyrics: string | null;
+  generatedLyrics2: string | null;
+  generatedTitle: string | null;
 }
 
 // Music Presets

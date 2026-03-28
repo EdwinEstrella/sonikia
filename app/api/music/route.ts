@@ -34,9 +34,10 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         prompt: body.prompt,
         music_style: body.music_style,
-        lyrics: body.lyrics,
-        make_instrumental: body.make_instrumental,
-        vocal_only: body.vocal_only,
+        // Instrumental: no enviar lyrics aunque el cliente las mande; el API puede priorizar voz.
+        ...(body.make_instrumental ? {} : body.lyrics ? { lyrics: body.lyrics } : {}),
+        make_instrumental: Boolean(body.make_instrumental),
+        vocal_only: Boolean(body.vocal_only),
         gender: body.gender,
         voice_id: body.voice_id,
         output_length: body.output_length,
