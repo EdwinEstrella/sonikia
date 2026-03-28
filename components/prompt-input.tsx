@@ -189,7 +189,7 @@ export const PromptInput = memo(function PromptInput({
         disabled={disabled || !value.trim()}
         className="group relative w-full py-3 sm:py-4 lg:py-5 px-6 sm:px-8 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white font-bold text-base sm:text-lg rounded-xl sm:rounded-2xl hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/30 active:scale-[0.98] overflow-hidden"
       >
-        <span className="relative flex items-center justify-center gap-2 sm:gap-3">
+        <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
           <svg
             className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse"
             fill="currentColor"
@@ -212,7 +212,6 @@ export const PromptInput = memo(function PromptInput({
             />
           </svg>
         </span>
-        <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       </button>
 
       {/* Pro Tips */}
