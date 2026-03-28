@@ -1,12 +1,12 @@
 import { useState, useCallback, useRef } from 'react';
 import type { AppState } from '@/types/musicgpt';
-import { useAuth } from '@/contexts/auth-context';
+import { getInsforgeAccessToken } from '@/lib/insforge';
+import { jsonHeadersWithInsforgeAuth } from '@/lib/insforge-auth-headers';
 
 const POLL_INTERVAL = 5000; // 5 seconds
 const MAX_POLLING_TIME = 600000; // 10 minutes
 
 export function useMusicGeneration() {
-  const { user } = useAuth();
   const [appState, setAppState] = useState<AppState>({
     status: 'idle',
     prompt: '',
@@ -28,7 +28,7 @@ export function useMusicGeneration() {
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const startPolling = useCallback(async (conversionId: string, conversionId2: string, taskId: string, eta: number, prompt: string, musicStyle: string, lyrics: string, makeInstrumental: boolean, vocalOnly: boolean, gender: string, userId: string) => {
+  const startPolling = useCallback(async (conversionId: string, conversionId2: string, taskId: string, eta: number, prompt: string, musicStyle: string, lyrics: string, makeInstrumental: boolean, vocalOnly: boolean, gender: string) => {
     const startTime = Date.now();
 
     const checkStatus = async () => {
@@ -50,11 +50,13 @@ export function useMusicGeneration() {
 
             // Save to InsForge
             try {
-              await fetch('/api/music/save', {
+              console.log('🎵 Saving music (JWT en Authorization → servidor + RLS)');
+
+              const saveResponse = await fetch('/api/music/save', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: jsonHeadersWithInsforgeAuth(getInsforgeAccessToken()),
                 body: JSON.stringify({
-                  userId,
+                  // user_id solo en servidor a partir del JWT
                   taskId,
                   conversionId1: conversionId,
                   conversionId2: conversionId2,
@@ -68,8 +70,15 @@ export function useMusicGeneration() {
                   audioUrl2: conversion_path_2,
                 }),
               });
+
+              const saveData = await saveResponse.json();
+              console.log('💾 Save response:', saveData);
+
+              if (!saveResponse.ok || !saveData.success) {
+                console.error('❌ Failed to save music:', saveData.error);
+              }
             } catch (saveError) {
-              console.error('Error saving music:', saveError);
+              console.error('❌ Error saving music:', saveError);
             }
 
             stopPolling();
@@ -194,8 +203,7 @@ export function useMusicGeneration() {
         appState.lyrics,
         appState.instrumentalOnly,
         appState.vocalOnly,
-        appState.gender,
-        user?.id || ''
+        appState.gender
       );
     } catch (error) {
       setAppState((prev) => ({

@@ -5,6 +5,8 @@ import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/navbar';
 import { MusicNote, Add, Delete, Download } from '@mui/icons-material';
+import { getInsforgeAccessToken } from '@/lib/insforge';
+import { insforgeAuthHeaders, jsonHeadersWithInsforgeAuth } from '@/lib/insforge-auth-headers';
 
 interface MusicTrack {
   id: string;
@@ -19,7 +21,7 @@ interface MusicTrack {
 }
 
 export default function HistoryPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, accessToken, loading: authLoading } = useAuth();
   const router = useRouter();
   const [tracks, setTracks] = useState<MusicTrack[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,9 +39,20 @@ export default function HistoryPage() {
   }, [user, authLoading, router]);
 
   const fetchHistory = async () => {
+    const token = accessToken ?? getInsforgeAccessToken();
+    if (!token) {
+      setError('No hay token de sesión. Cierra sesión y vuelve a entrar.');
+      setLoading(false);
+      return;
+    }
     try {
-      const response = await fetch(`/api/music/history?userId=${user?.id}`);
+      console.log('🔍 Frontend - Fetching history for user:', user?.id);
+      const response = await fetch('/api/music/history', {
+        headers: insforgeAuthHeaders({}, token),
+      });
       const data = await response.json();
+
+      console.log('🔍 Frontend - History response:', data);
 
       if (data.success) {
         setTracks(data.data || []);
@@ -47,6 +60,7 @@ export default function HistoryPage() {
         setError(data.error || 'Failed to fetch history');
       }
     } catch (err) {
+      console.error('❌ Frontend - Error fetching history:', err);
       setError('Error connecting to server');
     } finally {
       setLoading(false);
@@ -59,7 +73,7 @@ export default function HistoryPage() {
     try {
       const response = await fetch('/api/music/delete', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: jsonHeadersWithInsforgeAuth(accessToken ?? getInsforgeAccessToken()),
         body: JSON.stringify({ trackId, audioKey1, audioKey2 }),
       });
 
