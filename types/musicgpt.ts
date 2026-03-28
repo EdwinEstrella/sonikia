@@ -47,8 +47,51 @@ export interface AppState {
   status: AppStateStatus;
   prompt: string;
   taskId: string | null;
+  conversionId: string | null;
+  conversionId2: string | null;
   audioUrl: string | null;
+  audioUrl2: string | null;
   error: string | null;
   eta: number | null;
   progress: number;
+  vocalOnly: boolean;
+  instrumentalOnly: boolean;
+  selectedPreset: string;
+  lyrics: string;
+  gender: 'male' | 'female' | 'neutral' | '';
 }
+
+// Music Presets
+export interface MusicPreset {
+  id: string;
+  name: string;
+  emoji: string;
+  prompt: string;
+  category: 'genre' | 'mood' | 'instrumental';
+}
+
+export const MUSIC_PRESETS: MusicPreset[] = [
+  // Genre Presets
+  { id: 'lofi', name: 'Lo-Fi Hip Hop', emoji: '🎧', prompt: 'Lo-fi hip hop chill beats with vinyl crackle, soft piano melodies, and relaxed vibes', category: 'genre' },
+  { id: 'trap', name: 'Trap', emoji: '🔥', prompt: 'Modern trap with heavy 808 bass, rapid hi-hats, and dark atmospheric pads', category: 'genre' },
+  { id: 'reggaeton', name: 'Reggaeton', emoji: '🔥', prompt: 'Reggaeton with dembow rhythm, plucky synth melodies, and danceable energy', category: 'genre' },
+  { id: 'rock', name: 'Rock', emoji: '🎸', prompt: 'Rock with electric guitars, powerful drums, and driving energy', category: 'genre' },
+  { id: 'pop', name: 'Pop', emoji: '⭐', prompt: 'Modern pop with catchy melodies, bright production, and radio-friendly sound', category: 'genre' },
+  { id: 'jazz', name: 'Jazz', emoji: '🎷', prompt: 'Smooth jazz with saxophone, piano chords, and relaxed sophisticated atmosphere', category: 'genre' },
+  { id: 'edm', name: 'EDM', emoji: '🎹', prompt: 'Electronic dance music with pumping kick, synths, and high energy drops', category: 'genre' },
+  { id: 'classical', name: 'Classical', emoji: '🎻', prompt: 'Classical orchestra with strings, brass, and elegant composition', category: 'genre' },
+
+  // Mood Presets
+  { id: 'chill', name: 'Chill', emoji: '😌', prompt: 'Chill relaxed vibes with soft pads, gentle melodies, and peaceful atmosphere', category: 'mood' },
+  { id: 'energetic', name: 'Energetic', emoji: '⚡', prompt: 'High energy with fast tempo, driving rhythm, and intense excitement', category: 'mood' },
+  { id: 'sad', name: 'Melancholic', emoji: '😢', prompt: 'Sad emotional ballad with minor keys, slow tempo, and heartfelt feeling', category: 'mood' },
+  { id: 'epic', name: 'Epic', emoji: '🏰', prompt: 'Epic cinematic with orchestra, powerful brass, and dramatic intensity', category: 'mood' },
+  { id: 'romantic', name: 'Romantic', emoji: '💕', prompt: 'Romantic with soft piano, strings, and loving warm atmosphere', category: 'mood' },
+  { id: 'dark', name: 'Dark', emoji: '🌑', prompt: 'Dark moody atmosphere with deep bass, minor chords, and mysterious tension', category: 'mood' },
+
+  // Instrumental Presets
+  { id: 'piano', name: 'Piano Solo', emoji: '🎹', prompt: 'Beautiful piano solo with expressive melodies and harmonies', category: 'instrumental' },
+  { id: 'guitar', name: 'Guitar', emoji: '🎸', prompt: 'Acoustic guitar with fingerpicking patterns and warm tone', category: 'instrumental' },
+  { id: 'beats', name: 'Beats', emoji: '🥁', prompt: 'Instrumental beats with drums, bass, and rhythmic patterns', category: 'instrumental' },
+  { id: 'ambient', name: 'Ambient', emoji: '🌊', prompt: 'Ambient soundscape with pads, textures, and atmospheric sound design', category: 'instrumental' },
+];

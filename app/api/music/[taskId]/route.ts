@@ -26,13 +26,13 @@ export async function GET(
       );
     }
 
-    // Call MusicGPT API
+    // Call MusicGPT API - Use conversion_id instead of task_id
     const response = await fetch(
-      `${baseUrl}/v1/byId?conversionType=MUSIC_AI&task_id=${taskId}`,
+      `${baseUrl}/v1/byId?conversionType=MUSIC_AI&conversion_id=${taskId}`,
       {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': apiKey,
         },
       }
     );

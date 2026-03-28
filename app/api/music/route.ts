@@ -24,12 +24,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call MusicGPT API
+    // Call MusicGPT API - Using v1 endpoint
     const response = await fetch(`${baseUrl}/v1/MusicAI`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': apiKey,
       },
       body: JSON.stringify({
         prompt: body.prompt,

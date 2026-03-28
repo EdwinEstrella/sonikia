@@ -1,46 +1,82 @@
 import { useState, useCallback, useRef } from 'react';
 import type { AppState } from '@/types/musicgpt';
+import { useAuth } from '@/contexts/auth-context';
 
 const POLL_INTERVAL = 5000; // 5 seconds
 const MAX_POLLING_TIME = 600000; // 10 minutes
 
 export function useMusicGeneration() {
+  const { user } = useAuth();
   const [appState, setAppState] = useState<AppState>({
     status: 'idle',
     prompt: '',
     taskId: null,
+    conversionId: null,
+    conversionId2: null,
     audioUrl: null,
+    audioUrl2: null,
     error: null,
     eta: null,
     progress: 0,
+    vocalOnly: false,
+    instrumentalOnly: false,
+    selectedPreset: '',
+    lyrics: '',
+    gender: '',
   });
 
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const startPolling = useCallback((taskId: string, eta: number) => {
+  const startPolling = useCallback(async (conversionId: string, conversionId2: string, taskId: string, eta: number, prompt: string, musicStyle: string, lyrics: string, makeInstrumental: boolean, vocalOnly: boolean, gender: string, userId: string) => {
     const startTime = Date.now();
 
     const checkStatus = async () => {
       try {
-        const response = await fetch(`/api/music/${taskId}`);
+        const response = await fetch(`/api/music/${conversionId}`);
         const data = await response.json();
 
         if (data.success && data.conversion) {
-          const { status, audio_url } = data.conversion;
+          const { status, conversion_path_1, conversion_path_2 } = data.conversion;
 
-          if (status === 'complete' && audio_url) {
+          if (status === 'COMPLETED' && (conversion_path_1 || conversion_path_2)) {
             setAppState((prev) => ({
               ...prev,
               status: 'complete',
-              audioUrl: audio_url,
+              audioUrl: conversion_path_1,
+              audioUrl2: conversion_path_2,
               progress: 100,
             }));
+
+            // Save to InsForge
+            try {
+              await fetch('/api/music/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  userId,
+                  taskId,
+                  conversionId1: conversionId,
+                  conversionId2: conversionId2,
+                  prompt,
+                  musicStyle,
+                  lyrics,
+                  makeInstrumental,
+                  vocalOnly,
+                  gender,
+                  audioUrl1: conversion_path_1,
+                  audioUrl2: conversion_path_2,
+                }),
+              });
+            } catch (saveError) {
+              console.error('Error saving music:', saveError);
+            }
+
             stopPolling();
             return;
           }
 
-          if (status === 'failed') {
+          if (status === 'FAILED') {
             setAppState((prev) => ({
               ...prev,
               status: 'error',
@@ -105,12 +141,26 @@ export function useMusicGeneration() {
     }));
 
     try {
+      const requestBody: any = {
+        prompt,
+        make_instrumental: appState.instrumentalOnly,
+        vocal_only: appState.vocalOnly,
+      };
+
+      if (appState.lyrics.trim()) {
+        requestBody.lyrics = appState.lyrics.trim();
+      }
+
+      if (appState.gender) {
+        requestBody.gender = appState.gender;
+      }
+
       const response = await fetch('/api/music', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
@@ -122,10 +172,24 @@ export function useMusicGeneration() {
       setAppState((prev) => ({
         ...prev,
         taskId: data.task_id,
+        conversionId: data.conversion_id_1,
+        conversionId2: data.conversion_id_2,
         eta: data.eta,
       }));
 
-      startPolling(data.task_id, data.eta);
+      await startPolling(
+        data.conversion_id_1,
+        data.conversion_id_2,
+        data.task_id,
+        data.eta,
+        prompt,
+        appState.selectedPreset,
+        appState.lyrics,
+        appState.instrumentalOnly,
+        appState.vocalOnly,
+        appState.gender,
+        user?.id || ''
+      );
     } catch (error) {
       setAppState((prev) => ({
         ...prev,
@@ -133,7 +197,7 @@ export function useMusicGeneration() {
         error: error instanceof Error ? error.message : 'An error occurred',
       }));
     }
-  }, [startPolling]);
+  }, [startPolling, appState.instrumentalOnly, appState.vocalOnly, appState.lyrics, appState.gender]);
 
   const reset = useCallback(() => {
     stopPolling();
@@ -141,10 +205,18 @@ export function useMusicGeneration() {
       status: 'idle',
       prompt: '',
       taskId: null,
+      conversionId: null,
+      conversionId2: null,
       audioUrl: null,
+      audioUrl2: null,
       error: null,
       eta: null,
       progress: 0,
+      vocalOnly: false,
+      instrumentalOnly: false,
+      selectedPreset: '',
+      lyrics: '',
+      gender: '',
     });
   }, [stopPolling]);
 
@@ -152,10 +224,35 @@ export function useMusicGeneration() {
     setAppState((prev) => ({ ...prev, prompt }));
   }, []);
 
+  const setVocalOnly = useCallback((vocalOnly: boolean) => {
+    setAppState((prev) => ({ ...prev, vocalOnly, instrumentalOnly: vocalOnly ? false : prev.instrumentalOnly }));
+  }, []);
+
+  const setInstrumentalOnly = useCallback((instrumentalOnly: boolean) => {
+    setAppState((prev) => ({ ...prev, instrumentalOnly, vocalOnly: instrumentalOnly ? false : prev.vocalOnly }));
+  }, []);
+
+  const setSelectedPreset = useCallback((selectedPreset: string) => {
+    setAppState((prev) => ({ ...prev, selectedPreset }));
+  }, []);
+
+  const setLyrics = useCallback((lyrics: string) => {
+    setAppState((prev) => ({ ...prev, lyrics }));
+  }, []);
+
+  const setGender = useCallback((gender: 'male' | 'female' | 'neutral' | '') => {
+    setAppState((prev) => ({ ...prev, gender }));
+  }, []);
+
   return {
     appState,
     generateMusic,
     reset,
     setPrompt,
+    setVocalOnly,
+    setInstrumentalOnly,
+    setSelectedPreset,
+    setLyrics,
+    setGender,
   };
 }
