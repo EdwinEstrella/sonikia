@@ -1,178 +1,134 @@
-# Sonikia - Premium AI Music Generation
+<!-- Hero -->
+<h1 align="center">🎵 Sonikia · Generación de música con IA</h1>
 
-A sophisticated web application that generates unique music using artificial intelligence through the MusicGPT API.
+<p align="center">
+  <b>Vibe developer</b> · <b>Edwin Estrella</b> · Diseño & producto digital
+</p>
 
-## ✨ Features
+<p align="center">
+  <img
+    width="720"
+    alt="Vista principal de Sonikia — generador de música con tema oscuro y gradientes"
+    src="./docs/sonikia-hero.png"
+  />
+</p>
 
-- **Advanced AI Music Generation**: Create professional-quality tracks from text descriptions
-- **Premium Dark UI**: Modern, elegant interface with immersive dark theme
-- **Real-time Visualization**: Animated equalizer and progress indicators
-- **High-Quality Audio**: Built-in audio player with native controls
-- **Instant Downloads**: Save your creations as MP3 files
-- **Smart Error Handling**: Helpful troubleshooting tips and solutions
-- **Smooth Animations**: Fluid transitions and micro-interactions
-- **Fully Responsive**: Optimized for mobile, tablet, and desktop
-- **Glass Morphism Design**: Modern frosted glass effects
-- **Gradient Backgrounds**: Dynamic purple and pink themes
-- **React Best Practices**: Component composition, custom hooks, memoization
-- **Performance Optimized**: Efficient rendering and state management
+<h3 align="center">
+  Interfaces premium · Audio en tiempo real · Backend con InsForge & MusicGPT
+</h3>
 
-## 🎨 Design Philosophy
+<p align="center">
+  <b>“La música es arquitectura en el tiempo.”</b>
+</p>
 
-Sonikia features a premium, music-inspired aesthetic with:
-- Dark purple/pink gradient themes
-- Animated audio waveforms and particles
-- Professional glass-morphism cards
-- Smooth hover effects and transitions
-- Premium typography and spacing
-- Immersive visual experience
+---
 
-## 📋 Requisitos Previos
+### 👋 Sobre el proyecto
 
-- Node.js 20+ instalado
-- Una API key de MusicGPT (obténla en [https://api.musicgpt.com/](https://api.musicgpt.com/))
+- 🎹 **Sonikia** es una app web para crear música con IA usando la **MusicGPT API**, con UI oscura, animaciones y flujo de generación → reproducción → descarga.
+- 🔐 **Cuentas e historial** respaldados por **InsForge** (auth, base de datos y almacenamiento cuando aplica).
+- ⚡ Enfoque en **baja fricción**, feedback visual claro y código **TypeScript** mantenible.
+- 📫 Contacto: **[info@azokia.com](mailto:info@azokia.com)**
 
-## 🛠️ Instalación
+---
 
-1. **Clona el repositorio** (o navega al directorio del proyecto):
-   ```bash
-   cd sonikia
-   ```
+### ✨ Características
 
-2. **Instala las dependencias**:
-   ```bash
-   npm install
-   ```
+- Generación guiada por prompt (incluye modo instrumental y manejo de letras cuando la API las devuelve).
+- Reproductor integrado, descarga en MP3 y estados de carga con progreso.
+- Historial por usuario (RLS) y rutas API con sesión/JWT según la configuración del proyecto.
+- Diseño responsive, glassmorphism y microinteracciones (Framer Motion, MUI donde corresponde).
 
-3. **Configura las variables de entorno**:
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%" alt="" />
 
-   Crea un archivo `.env.local` en la raíz del proyecto con tu API key:
-   ```env
-   MUSICGPT_API_KEY=tu_api_key_aqui
-   MUSICGPT_BASE_URL=https://api.musicgpt.com/api/public
-   ```
+### 🛠 Stack & herramientas
 
-   Nota: Ya existe un archivo `.env.local` con una plantilla de configuración.
+<img src="https://media2.giphy.com/media/QssGEmpkyEOhBCb7e1/giphy.gif" width="20" alt="" /> &ensp; **Con qué está construido**
 
-## 🎬 Cómo Ejecutar
+<br/>
 
-### Modo Desarrollo
+[![Stack](https://skillicons.dev/icons?i=ts,react,next,tailwind,nodejs,postgres,git,github,docker)](https://skillicons.dev)
+
+<p align="center">
+  <sub>También: <b>@insforge/sdk</b>, <b>MusicGPT API</b>, <b>MUI</b>, <b>Framer Motion</b></sub>
+</p>
+
+---
+
+### 📋 Requisitos
+
+- **Node.js** ≥ 20.9
+- Cuenta / API key de **MusicGPT** ([api.musicgpt.com](https://api.musicgpt.com/))
+- Proyecto **InsForge** (URL + anon key) si usas auth, historial y guardado en backend
+
+### ⚙️ Instalación
+
 ```bash
-npm run dev
+git clone <tu-repo>
+cd sonikia
+npm install
 ```
 
-Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+Crea `.env.local` en la raíz:
 
-### Modo Producción
-```bash
-npm run build
-npm start
+```env
+# MusicGPT
+MUSICGPT_API_KEY=tu_api_key
+MUSICGPT_BASE_URL=https://api.musicgpt.com/api/public
+
+# InsForge (frontend + API routes)
+NEXT_PUBLIC_INSFORGE_BASE_URL=https://tu-app.region.insforge.app
+NEXT_PUBLIC_INSFORGE_ANON_KEY=tu_anon_key
 ```
 
-## 📖 Uso
+### 🎬 Scripts
 
-1. **Describe tu música**: En el área de texto, describe el tipo de música que deseas generar (ej: "lofi chill beat con piano y lluvia")
+| Comando        | Descripción        |
+| -------------- | ------------------ |
+| `npm run dev`  | Desarrollo         |
+| `npm run build` | Build producción  |
+| `npm start`    | Servidor producción |
+| `npm run lint` | ESLint             |
 
-2. **Genera**: Haz clic en el botón "Generar Música"
+Abre [http://localhost:3000](http://localhost:3000).
 
-3. **Espera**: El sistema mostrará una barra de progreso mientras se genera tu música
+---
 
-4. **Disfruta**: Cuando esté completa, podrás reproducir la música directamente en el navegador o descargarla como MP3
-
-## 🎬 How to Run
-
-### Development Mode
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Production Mode
-```bash
-npm run build
-npm start
-```
-
-## 📖 Usage
-
-1. **Describe Your Music**: Enter a detailed description of the music you want to create (e.g., "lo-fi chill beat with soft piano and rain sounds")
-
-2. **Generate**: Click the "Generate Music" button
-
-3. **Wait**: The system will show a progress bar with real-time updates
-
-4. **Enjoy**: When complete, play the music directly in the browser or download it as MP3
-
-## 🏗️ Project Structure
+### 📁 Estructura (resumen)
 
 ```
 sonikia/
-├── app/
-│   ├── api/
-│   │   └── music/
-│   │       ├── route.ts          # POST: Start generation
-│   │       └── [taskId]/
-│   │           └── route.ts      # GET: Check status
-│   ├── page.tsx                  # Main page
-│   ├── layout.tsx                # App layout
-│   └── globals.css               # Global styles & animations
-├── components/
-│   └── music-generator.tsx       # Main component
-├── types/
-│   └── musicgpt.ts               # TypeScript types
-├── .env.local                    # Environment variables
-├── PLAN.md                       # Implementation plan
-└── package.json                  # Dependencies
+├── app/                 # App Router, páginas y API routes
+├── components/          # UI (generador, estados, layout)
+├── contexts/            # Auth / estado global cliente
+├── hooks/               # useMusicGeneration, etc.
+├── lib/                 # InsForge, sesión, helpers API
+├── types/               # Tipos MusicGPT y dominio
+└── docs/                # Capturas y documentación visual
 ```
 
-## 🔧 Tech Stack
+---
 
-- **Next.js 16.2.1** - React framework
-- **React 19.2.4** - UI library
-- **TypeScript 5** - Static typing
-- **Tailwind CSS 4** - Styling
-- **MusicGPT API** - AI music generation
+### 🚀 En lo que me enfoco
 
-## 📝 Important Notes
+- Productos con **UX clara** y rendimiento aceptable en red lenta.
+- Integraciones **API + auth** sin filtrar secretos al cliente.
+- Código **tipado**, separación cliente/servidor y manejo de errores legible para el usuario.
 
-- Music generation time varies based on prompt complexity
-- Status polling occurs every 5 seconds
-- Maximum timeout is 10 minutes
-- Keep your API key secure and never share it publicly
+---
 
-## 🐛 Troubleshooting
+### 📄 Licencia
 
-### Error: "MusicGPT API key is not configured"
-- Ensure you've created the `.env.local` file with your API key
-- Restart the development server after creating the file
+MIT — ver uso responsable de claves y cuotas de terceros (MusicGPT / InsForge).
 
-### Error: "Failed to generate music"
-- Verify your API key is valid
-- Ensure you have sufficient credits in your MusicGPT account
-- Check that your prompt is not empty
+### 💌 Contacto
 
-### Music is taking too long to generate
-- This is normal depending on prompt complexity
-- Estimated time is displayed during generation
+<p>
+  <a href="mailto:info@azokia.com">
+    <img src="https://img.shields.io/badge/Email-info%40azokia.com-6366f1?style=for-the-badge&logo=gmail&logoColor=white" alt="Email info@azokia.com" />
+  </a>
+</p>
 
-## 🎨 Design Features
-
-- **Immersive Dark Theme**: Easy on the eyes, professional appearance
-- **Animated Equalizers**: Visual feedback during music generation
-- **Gradient Effects**: Purple and pink color scheme
-- **Glass Morphism**: Modern frosted glass UI elements
-- **Smooth Transitions**: Polished animations throughout
-- **Responsive Layout**: Works perfectly on all devices
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 👨‍💻 Credits
-
-Designed and developed by Edwin Estrella
-
-## 🤝 Contributing
-
-Contributions are welcome. Please open an issue or pull request for any improvements or bug fixes.
+<p align="center">
+  <sub>Hecho con 🎧 por <b>Edwin Estrella</b></sub>
+</p>
