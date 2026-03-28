@@ -26,7 +26,8 @@
 ### 👋 Sobre el proyecto
 
 - 🎹 **Sonikia** es una app web para crear música con IA usando la **MusicGPT API**, con UI oscura, animaciones y flujo de generación → reproducción → descarga.
-- 🔐 **Cuentas e historial** respaldados por **InsForge** (auth, base de datos y almacenamiento cuando aplica).
+- 🔐 **Cuentas, datos y archivos** viven en **InsForge**: **PostgreSQL** (tabla `music_tracks` con RLS), **autenticación** (JWT del usuario) y **Storage** (bucket `music-tracks` para los MP3).
+- 🚢 **Despliegue**: el proyecto se publica con **[CubePath](https://cubepath.com)** (VPS/infra) y **[Dokploy](https://dokploy.com)** instalado desde el [marketplace de CubePath](https://cubepath.com/en/marketplace/dokploy): despliegues Docker, dominio, SSL y variables de entorno desde el panel.
 - ⚡ Enfoque en **baja fricción**, feedback visual claro y código **TypeScript** mantenible.
 - 📫 Contacto: **[info@azokia.com](mailto:info@azokia.com)**
 
@@ -91,6 +92,55 @@ NEXT_PUBLIC_INSFORGE_ANON_KEY=tu_anon_key
 | `npm run lint` | ESLint             |
 
 Abre [http://localhost:3000](http://localhost:3000).
+
+---
+
+### 🚢 Despliegue (CubePath + Dokploy)
+
+1. En **CubePath** levanta un servidor y, si aplica, instala **Dokploy** desde su marketplace (panel para apps en Docker).
+2. En **Dokploy** crea la aplicación (repo Git o imagen), comando de build/start (`npm run build` + `npm start`, o Dockerfile) y dominio con SSL.
+3. En **CubePath** (firewall, DNS o IP fija) apunta el dominio al VPS donde corre Dokploy, según tu configuración.
+4. En **Dokploy**, define **las mismas variables** que en `.env.local` (`MUSICGPT_*`, `NEXT_PUBLIC_INSFORGE_*` y secretos de servidor).
+5. La app en producción es **Next.js**: `app/api/*` actúa como BFF hacia **MusicGPT** (API key solo en servidor) e **InsForge** (Bearer del usuario en rutas protegidas).
+
+---
+
+### 🗺️ Cómo se relacionan las APIs
+
+Hay **dos “mundos”**: (A) generación y estado vía **MusicGPT**; (B) persistencia y archivos vía **InsForge** usando el **JWT** del usuario en cabecera `Authorization: Bearer`.
+
+```mermaid
+flowchart LR
+  subgraph Cliente["Navegador / cliente"]
+    UI[App Next.js]
+  end
+  subgraph Next["API Routes Next.js"]
+    M1["POST /api/music"]
+    M2["GET /api/music/:taskId"]
+    S1["POST /api/music/save"]
+    H1["GET /api/music/history"]
+    D1["POST /api/music/delete"]
+  end
+  subgraph Ext["Servicios externos"]
+    MG[MusicGPT API]
+    IF[(InsForge: Postgres + Storage + Auth)]
+  end
+  UI --> M1 --> MG
+  UI --> M2 --> MG
+  UI --> S1 --> IF
+  UI --> H1 --> IF
+  UI --> D1 --> IF
+```
+
+| Ruta | Método | Qué hace | Servicio |
+|------|--------|----------|----------|
+| `/api/music` | `POST` | Inicia generación (`MusicAI`), prompt, estilo, instrumental, etc. | **MusicGPT** (solo `MUSICGPT_API_KEY` en servidor) |
+| `/api/music/[taskId]` | `GET` | Consulta estado/resultado de una conversión por `conversion_id` | **MusicGPT** |
+| `/api/music/save` | `POST` | Sube audio al bucket `music-tracks` y guarda fila en `music_tracks` | **InsForge** Storage + DB (requiere **Bearer** válido) |
+| `/api/music/history` | `GET` | Lista tracks del usuario; el filtrado lo aplica **RLS** (`auth.uid() = user_id`) | **InsForge** DB (requiere **Bearer**) |
+| `/api/music/delete` | `POST` | Borra objetos en Storage (si hay `audio_key_*`) y la fila en `music_tracks` | **InsForge** (requiere **Bearer**) |
+
+El **login/registro** y la sesión se gestionan con **InsForge** en el cliente (`@insforge/sdk`); las rutas `save`, `history` y `delete` reutilizan ese **access token** para que PostgREST/RLS ejecuten como el usuario correcto.
 
 ---
 
