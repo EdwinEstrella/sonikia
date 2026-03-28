@@ -7,10 +7,10 @@ interface User {
   id: string;
   email: string;
   emailVerified: boolean;
-  profile?: {
+  profile: {
     name?: string;
     avatar_url?: string;
-  };
+  } | null;
 }
 
 interface AuthContextType {
@@ -53,7 +53,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: error.message || 'Error al iniciar sesión' };
       }
 
-      setUser(data.user);
+      if (data?.user) {
+        setUser(data.user);
+      }
       return { success: true };
     } catch (error) {
       return { success: false, error: 'Error al conectar con el servidor' };

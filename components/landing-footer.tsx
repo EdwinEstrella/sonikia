@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { MusicNote } from '@mui/icons-material';
 
 export function LandingFooter() {
   return (
@@ -15,9 +16,7 @@ export function LandingFooter() {
             className="flex items-center gap-3"
           >
             <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
-              </svg>
+              <MusicNote className="text-white" />
             </div>
             <span className="text-xl font-bold text-white">Sonikia</span>
           </motion.div>

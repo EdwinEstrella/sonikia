@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function AuthPage() {
   const { signIn, signUp } = useAuth();
@@ -174,7 +175,7 @@ export default function AuthPage() {
 
           {/* Back to Home */}
           <div className="mt-6 text-center">
-            <a
+            <Link
               href="/"
               className="text-sm text-gray-400 hover:text-purple-400 transition-colors inline-flex items-center gap-2"
             >
@@ -182,7 +183,7 @@ export default function AuthPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Volver al inicio
-            </a>
+            </Link>
           </div>
         </div>
       </motion.div>

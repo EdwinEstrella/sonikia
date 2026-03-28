@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/navbar';
+import { MusicNote, Add, Delete, Download } from '@mui/icons-material';
 
 interface MusicTrack {
   id: string;
@@ -125,9 +126,7 @@ export default function HistoryPage() {
         {tracks.length === 0 && !loading && !error && (
           <div className="text-center py-20">
             <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-full flex items-center justify-center">
-              <svg className="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3m0 0l-12 3m0 0V9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <MusicNote className="w-12 h-12 text-purple-400" />
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">Sin músicas aún</h3>
             <p className="text-gray-400 mb-6">Crea tu primera música con IA</p>
@@ -135,9 +134,7 @@ export default function HistoryPage() {
               href="/app"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg shadow-purple-500/30"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
+              <Add fontSize="small" />
               Crear Música
             </a>
           </div>
@@ -169,9 +166,7 @@ export default function HistoryPage() {
                   className="p-2 text-gray-500 hover:text-red-400 transition-colors"
                   title="Eliminar"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 011-1h2a1 1 0 011 1v3M4 7h16" />
-                  </svg>
+                  <Delete fontSize="small" />
                 </button>
               </div>
 
@@ -192,9 +187,7 @@ export default function HistoryPage() {
                       download
                       className="inline-flex items-center gap-1 mt-2 text-xs text-purple-400 hover:text-purple-300 transition-colors"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
+                      <Download fontSize="inherit" />
                       Descargar
                     </a>
                   </div>
@@ -215,9 +208,7 @@ export default function HistoryPage() {
                       download
                       className="inline-flex items-center gap-1 mt-2 text-xs text-pink-400 hover:text-pink-300 transition-colors"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
+                      <Download fontSize="inherit" />
                       Descargar
                     </a>
                   </div>

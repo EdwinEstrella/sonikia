@@ -92,53 +92,8 @@ export function LandingHero() {
             </a>
           </motion.div>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
-            className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto"
-          >
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
-                ∞
-              </div>
-              <div className="text-sm text-gray-400 mt-1">Canciones</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">
-                2
-              </div>
-              <div className="text-sm text-gray-400 mt-1">Versiones</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
-                0$
-              </div>
-              <div className="text-sm text-gray-400 mt-1">Costo</div>
-            </div>
-          </motion.div>
         </motion.div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="flex flex-col items-center gap-2 text-gray-500"
-        >
-          <span className="text-sm">Descubre más</span>
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </motion.div>
-      </motion.div>
     </section>
   );
 }

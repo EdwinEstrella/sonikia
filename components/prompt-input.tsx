@@ -1,5 +1,6 @@
 import { memo, useState } from 'react';
 import { MUSIC_PRESETS, type MusicPreset } from '@/types/musicgpt';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '@/components/ui/select';
 
 interface PromptInputProps {
   value: string;
@@ -37,8 +38,7 @@ export const PromptInput = memo(function PromptInput({
   const maxLength = 280;
   const lyricsMaxLength = 2000;
 
-  const handlePresetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const presetId = e.target.value;
+  const handlePresetChange = (presetId: string) => {
     onPresetChange(presetId);
     const preset = MUSIC_PRESETS.find(p => p.id === presetId);
     if (preset) {
@@ -84,64 +84,6 @@ export const PromptInput = memo(function PromptInput({
             Solo Música
           </span>
         </button>
-      </div>
-
-      {/* Music Style Dropdown */}
-      <div className="space-y-2 sm:space-y-3">
-        <label htmlFor="style-select" className="block text-xs sm:text-sm font-semibold text-purple-300 uppercase tracking-wider flex items-center gap-2">
-          <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-          </svg>
-          Estilo Musical
-        </label>
-        <div className="relative">
-          <select
-            id="style-select"
-            value={selectedPreset}
-            onChange={handlePresetChange}
-            className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-900/60 border-2 border-purple-500/30 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base text-gray-100 appearance-none cursor-pointer transition-all duration-300 focus:border-purple-500/60 focus:shadow-lg focus:shadow-purple-500/20"
-          >
-            <option value="">Selecciona un estilo...</option>
-            {MUSIC_PRESETS.map((preset) => (
-              <option key={preset.id} value={preset.id}>
-                {preset.emoji} {preset.name}
-              </option>
-            ))}
-          </select>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-            <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      {/* Gender Dropdown */}
-      <div className="space-y-2 sm:space-y-3">
-        <label htmlFor="gender-select" className="block text-xs sm:text-sm font-semibold text-purple-300 uppercase tracking-wider flex items-center gap-2">
-          <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-          </svg>
-          Género de Voz (Opcional)
-        </label>
-        <div className="relative">
-          <select
-            id="gender-select"
-            value={gender}
-            onChange={(e) => onGenderChange(e.target.value as 'male' | 'female' | 'neutral' | '')}
-            className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-900/60 border-2 border-purple-500/30 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base text-gray-100 appearance-none cursor-pointer transition-all duration-300 focus:border-purple-500/60 focus:shadow-lg focus:shadow-purple-500/20"
-          >
-            <option value="">Sin preferencia</option>
-            <option value="male">Masculino</option>
-            <option value="female">Femenino</option>
-            <option value="neutral">Neutral</option>
-          </select>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-            <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
       </div>
 
       {/* Lyrics Input */}
@@ -200,6 +142,45 @@ export const PromptInput = memo(function PromptInput({
             {value.length}/{maxLength}
           </div>
         </div>
+      </div>
+
+      {/* Music Style Dropdown */}
+      <div className="space-y-2 sm:space-y-3">
+        <label className="block text-xs sm:text-sm font-semibold text-purple-300 uppercase tracking-wider flex items-center gap-2">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+          Estilo Musical
+        </label>
+        <Select value={selectedPreset} onValueChange={handlePresetChange}>
+          <SelectTrigger placeholder="Selecciona un estilo..." />
+          <SelectContent>
+            {MUSIC_PRESETS.map((preset, index) => (
+              <SelectItem key={preset.id} index={index} value={preset.id}>
+                {preset.emoji} {preset.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Gender Dropdown */}
+      <div className="space-y-2 sm:space-y-3">
+        <label className="block text-xs sm:text-sm font-semibold text-purple-300 uppercase tracking-wider flex items-center gap-2">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+          </svg>
+          Género de Voz (Opcional)
+        </label>
+        <Select value={gender} onValueChange={(value) => onGenderChange(value as 'male' | 'female' | 'neutral' | '')}>
+          <SelectTrigger placeholder="Sin preferencia" />
+          <SelectContent>
+            <SelectItem index={0} value="">Sin preferencia</SelectItem>
+            <SelectItem index={1} value="male">Masculino</SelectItem>
+            <SelectItem index={2} value="female">Femenino</SelectItem>
+            <SelectItem index={3} value="neutral">Neutral</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Generate Button */}

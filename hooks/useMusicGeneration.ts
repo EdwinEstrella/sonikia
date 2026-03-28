@@ -141,7 +141,14 @@ export function useMusicGeneration() {
     }));
 
     try {
-      const requestBody: any = {
+      const requestBody: {
+        prompt: string;
+        make_instrumental: boolean;
+        vocal_only: boolean;
+        music_style?: string;
+        lyrics?: string;
+        gender?: string;
+      } = {
         prompt,
         make_instrumental: appState.instrumentalOnly,
         vocal_only: appState.vocalOnly,

@@ -11,6 +11,16 @@
       "sourceType": "github",
       "computedHash": "3a5a40aa1a9ca2879efaa49d8dcad2b1a977a519abc75a2f61ace5ad8e0ba2f8"
     },
+    "responsive-design": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "1c756f7e216c16c91be788a0f64ae5d94451b5ffe076a1e120f671e2a3c9bd3e"
+    },
+    "svg-icon-generator": {
+      "source": "jeremylongshore/claude-code-plugins-plus-skills",
+      "sourceType": "github",
+      "computedHash": "4a66d87653c673517258f47286a3c81859c8c6beca4a75a2a677c1c7fd4805d6"
+    },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
