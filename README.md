@@ -59,7 +59,7 @@
 ### 📋 Requisitos
 
 - **Node.js** ≥ 20.9
-- Cuenta / API key de **MusicGPT** ([api.musicgpt.com](https://api.musicgpt.com/))
+- Cuenta / API key de **MusicGPT** ([musicgpt.com](https://musicgpt.com/invite?invite_handle=@azokiallc))
 - Proyecto **InsForge** (URL + anon key) si usas auth, historial y guardado en backend
 
 ### ⚙️ Instalación
